@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/enginelink/enginelink"
+    "url": "https://github.com/rmoubayed/engine-link"
   },
   "engines": {
     "vscode": "^1.85.0"
