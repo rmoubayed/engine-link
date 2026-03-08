@@ -1,0 +1,323 @@
+{
+  "name": "enginelink",
+  "displayName": "EngineLink",
+  "description": "Cursor-first Unreal Engine build bridge — build, launch, and live-code UE projects with AI-powered tooling",
+  "version": "0.1.0",
+  "publisher": "enginelink",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enginelink/enginelink"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "unreal engine",
+    "unreal",
+    "ue5",
+    "game development",
+    "c++",
+    "build",
+    "cursor",
+    "live coding"
+  ],
+  "icon": "media/icon.png",
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "workspaceContains:**/*.uproject"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "enginelink.build",
+        "title": "Build",
+        "category": "EngineLink",
+        "icon": "$(play)"
+      },
+      {
+        "command": "enginelink.rebuild",
+        "title": "Rebuild (Clean + Build)",
+        "category": "EngineLink",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "enginelink.clean",
+        "title": "Clean",
+        "category": "EngineLink",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "enginelink.launchEditor",
+        "title": "Launch Unreal Editor",
+        "category": "EngineLink",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "enginelink.liveCoding",
+        "title": "Live Coding Compile",
+        "category": "EngineLink",
+        "icon": "$(zap)"
+      },
+      {
+        "command": "enginelink.generateCompileCommands",
+        "title": "Generate compile_commands.json",
+        "category": "EngineLink",
+        "icon": "$(database)"
+      },
+      {
+        "command": "enginelink.selectEngine",
+        "title": "Select Unreal Engine Installation",
+        "category": "EngineLink"
+      },
+      {
+        "command": "enginelink.selectProject",
+        "title": "Select UE Project",
+        "category": "EngineLink"
+      },
+      {
+        "command": "enginelink.selectBuildConfig",
+        "title": "Select Build Configuration",
+        "category": "EngineLink"
+      },
+      {
+        "command": "enginelink.selectTarget",
+        "title": "Select Build Target Type",
+        "category": "EngineLink"
+      }
+    ],
+    "configuration": {
+      "title": "EngineLink",
+      "properties": {
+        "enginelink.engineRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Manual override for the Unreal Engine root directory. Leave empty for auto-detection.",
+          "scope": "resource"
+        },
+        "enginelink.projectFile": {
+          "type": "string",
+          "default": "",
+          "description": "Path to .uproject file. Leave empty for auto-detection.",
+          "scope": "resource"
+        },
+        "enginelink.buildConfiguration": {
+          "type": "string",
+          "default": "Development",
+          "enum": [
+            "Debug",
+            "DebugGame",
+            "Development",
+            "Shipping",
+            "Test"
+          ],
+          "description": "Default build configuration.",
+          "scope": "resource"
+        },
+        "enginelink.buildTarget": {
+          "type": "string",
+          "default": "Editor",
+          "enum": [
+            "Editor",
+            "Game",
+            "Client",
+            "Server"
+          ],
+          "description": "Default build target type.",
+          "scope": "resource"
+        },
+        "enginelink.platform": {
+          "type": "string",
+          "default": "Win64",
+          "description": "Target platform for builds.",
+          "scope": "resource"
+        },
+        "enginelink.autoGenerateCompileCommands": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically generate compile_commands.json on project detection."
+        },
+        "enginelink.liveCoding.method": {
+          "type": "string",
+          "default": "keystroke",
+          "enum": [
+            "keystroke",
+            "disabled"
+          ],
+          "description": "Method to trigger Live Coding. 'keystroke' simulates Ctrl+Alt+F11.",
+          "scope": "resource"
+        },
+        "enginelink.vsBuildTools.path": {
+          "type": "string",
+          "default": "",
+          "description": "Manual override for VS Build Tools installation path."
+        }
+      }
+    },
+    "taskDefinitions": [
+      {
+        "type": "enginelink",
+        "required": [
+          "action"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "build",
+              "rebuild",
+              "clean",
+              "generateCompileCommands"
+            ],
+            "description": "The build action to perform."
+          },
+          "configuration": {
+            "type": "string",
+            "enum": [
+              "Debug",
+              "DebugGame",
+              "Development",
+              "Shipping",
+              "Test"
+            ],
+            "description": "Build configuration override."
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "Editor",
+              "Game",
+              "Client",
+              "Server"
+            ],
+            "description": "Build target type override."
+          },
+          "platform": {
+            "type": "string",
+            "description": "Target platform override."
+          }
+        }
+      }
+    ],
+    "problemMatchers": [
+      {
+        "name": "enginelink-msvc",
+        "owner": "enginelink",
+        "fileLocation": [
+          "autoDetect",
+          "${workspaceFolder}"
+        ],
+        "pattern": {
+          "regexp": "^(?:\\s*\\d+>)?([^\\s].*?)\\((\\d+),?(\\d+)?(?:,\\d+,\\d+)?\\)\\s*:\\s+(error|warning|info)\\s+(\\w{1,2}\\d+)\\s*:\\s*(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        }
+      },
+      {
+        "name": "enginelink-ubt",
+        "owner": "enginelink",
+        "fileLocation": [
+          "autoDetect",
+          "${workspaceFolder}"
+        ],
+        "pattern": {
+          "regexp": "^(.+?)\\((\\d+),(\\d+)\\):\\s+error:\\s+(.+)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        }
+      }
+    ],
+    "menus": {
+      "editor/title/run": [
+        {
+          "command": "enginelink.build",
+          "group": "navigation@1",
+          "when": "enginelink.projectDetected"
+        },
+        {
+          "command": "enginelink.launchEditor",
+          "group": "navigation@2",
+          "when": "enginelink.projectDetected"
+        },
+        {
+          "command": "enginelink.liveCoding",
+          "group": "navigation@3",
+          "when": "enginelink.projectDetected"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "enginelink.rebuild",
+          "group": "1_enginelink@1",
+          "when": "enginelink.projectDetected"
+        },
+        {
+          "command": "enginelink.clean",
+          "group": "1_enginelink@2",
+          "when": "enginelink.projectDetected"
+        },
+        {
+          "command": "enginelink.generateCompileCommands",
+          "group": "1_enginelink@3",
+          "when": "enginelink.projectDetected"
+        },
+        {
+          "command": "enginelink.selectBuildConfig",
+          "group": "2_enginelink@1",
+          "when": "enginelink.projectDetected"
+        },
+        {
+          "command": "enginelink.selectTarget",
+          "group": "2_enginelink@2",
+          "when": "enginelink.projectDetected"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "enginelink.build",
+        "key": "ctrl+shift+b",
+        "when": "enginelink.projectDetected"
+      },
+      {
+        "command": "enginelink.liveCoding",
+        "key": "ctrl+alt+f11",
+        "when": "enginelink.projectDetected"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "lint": "eslint src/",
+    "format": "prettier --write src/",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "package": "vsce package",
+    "prepackage": "npm run build"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vscode/test-electron": "^2.3.8",
+    "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.20.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  }
+}
