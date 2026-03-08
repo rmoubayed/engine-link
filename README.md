@@ -6,6 +6,8 @@ EngineLink connects [Cursor](https://cursor.sh) (and VS Code) to Unreal Engine s
 
 > **Status:** Early preview (`0.1.0`). Windows-only for now.
 
+> **TL;DR:** This is a fun experiment. I've been building software for 10 years but game dev is new to me. As I learn Unreal Engine, I found Rider and Visual Studio to be very old-fashioned compared to modern AI-first editors — so I decided to give Cursor full UE capabilities. I'm testing this extension as I go, learning and breaking things along the way. Contributions and feedback are very welcome :)
+
 ---
 
 ## Features
@@ -237,7 +239,7 @@ src/
 └── ui/
     ├── statusBar.ts              # Status bar items
     ├── outputChannel.ts          # Output channel factory
-    └── sidebarProvider.ts        # Webview sidebar (WIP)
+    └── quickPicks.ts             # Quick-pick menus for config selection
 ```
 
 ---
@@ -298,10 +300,10 @@ Contributions are welcome! Here's how to get started:
 
 ### Areas where help is needed
 
+- **Testing** — the test infrastructure is in place (Vitest) but no tests have been written yet. This is the biggest gap right now: unit tests for detection logic, build command construction, output parsing, and integration tests against real UE projects
 - **macOS / Linux support** — engine discovery, process detection, and Live Coding are currently Windows-only
-- **Test coverage** — the test infrastructure is in place (Vitest) but no tests have been written yet
-- **Sidebar UI** — a webview sidebar provider exists but is not yet registered
 - **UE version support** — testing and adapting for UE versions before 5.4
+- **Marketplace publishing** — getting the extension on Open VSX (Cursor's marketplace)
 
 ---
 
