@@ -1,56 +1,90 @@
 # EngineLink
 
+🌐 [enginelink.dev](https://enginelink.dev)
+
 **Cursor-first Unreal Engine build bridge** — build, launch, and live-code UE projects with AI-powered tooling.
 
 EngineLink connects [Cursor](https://cursor.sh) (and VS Code) to Unreal Engine so you can compile, iterate, and debug C++ projects without leaving your editor. It auto-detects your `.uproject`, discovers engine installations from the Windows registry, and exposes every build action to Cursor's AI agent via a built-in [MCP](https://modelcontextprotocol.io/) server.
 
-> **Status:** Early preview (`0.1.0`). Windows-only for now.
+> 🧪 **Status:** Early preview (`0.1.0`). Windows-only for now.
 
-> **TL;DR:** This is a fun experiment. I've been building software for 10 years but game dev is new to me. As I learn Unreal Engine, I found Rider and Visual Studio to be very old-fashioned compared to modern AI-first editors — so I decided to give Cursor full UE capabilities. I'm testing this extension as I go, learning and breaking things along the way. Contributions and feedback are very welcome :)
+> 👋 **TL;DR:** This is a fun experiment! I've been building software for 10 years but game dev is new to me. As I learn Unreal Engine, I found Rider and Visual Studio to be very old-fashioned compared to modern AI-first editors — so I decided to give Cursor full UE capabilities. I'm testing this extension as I go, learning and breaking things along the way. Contributions and feedback are very welcome :)
 
 ---
 
-## Features
+## 🙏 Contributing & Help Wanted
 
-### Build Integration
+This project is early and there's a lot to improve. If any of this interests you, jump in!
+
+### 📐 Cursor Rules & UE Best Practices (feedback needed most!)
+
+EngineLink auto-generates `.cursor/rules/*.mdc` files that teach Cursor's AI how to write idiomatic Unreal C++. **This is where we need the most help** — if you're an experienced UE developer, your feedback on these rules would be incredibly valuable:
+
+| Rule File | What it covers |
+|---|---|
+| `unreal-conventions.mdc` | Class prefixes (`U`, `A`, `F`, `E`, `I`, `T`), PascalCase, UE container types |
+| `unreal-macros.mdc` | `UCLASS`, `UPROPERTY`, `UFUNCTION`, `USTRUCT`, `UENUM`, `GENERATED_BODY` |
+| `unreal-build-system.mdc` | `.Build.cs`, `.Target.cs`, module structure, dependency management |
+| `unreal-live-coding.mdc` | What Live Coding can and cannot patch at runtime |
+| `unreal-patterns.mdc` | Delegates, timers, subsystems, Gameplay Tags, Enhanced Input, logging |
+
+> 💡 These files are never overwritten once generated, so you can customize them freely. If you know UE well and think a rule is wrong or missing — please open an issue or PR!
+
+### 🧩 Other areas where help is needed
+
+- 🧪 **Testing** — Vitest is set up but no tests exist yet. This is the biggest code gap: unit tests for detection, build commands, output parsing, and integration tests against real UE projects
+
+### How to contribute
+
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Make your changes
+4. Run `npm run lint && npm run typecheck` to verify
+5. Open a pull request
+
+---
+
+## ✨ Features
+
+### 🔨 Build Integration
 
 - **Build / Rebuild / Clean** — invoke UnrealBuildTool directly from the editor with full output streaming
-- **Live Coding** — trigger `Ctrl+Alt+F11` hot-reload in a running Unreal Editor session
-- **Editor-aware builds** — detects when Unreal Editor is running and suggests Live Coding over a full build to avoid DLL lock errors
-- **`compile_commands.json` generation** — runs UBT's `GenerateClangDatabase` mode and copies the result to your project root for accurate IntelliSense
+- **⚡ Live Coding** — trigger `Ctrl+Alt+F11` hot-reload in a running Unreal Editor session
+- **🧠 Editor-aware builds** — detects when Unreal Editor is running and suggests Live Coding over a full build to avoid DLL lock errors
+- **📄 `compile_commands.json` generation** — runs UBT's `GenerateClangDatabase` mode for accurate IntelliSense
 
-### Auto-Detection
+### 🔍 Auto-Detection
 
 - **Project detection** — scans the workspace for `.uproject` files and parses `EngineAssociation`
-- **Engine discovery** — reads the Windows registry (Epic Games Launcher installs and source builds) plus common installation paths
+- **Engine discovery** — reads the Windows registry (Epic Games Launcher + source builds) plus common paths
 - **Build tools detection** — locates Visual Studio Build Tools via `vswhere`
 
-### Cursor AI Integration
+### 🤖 Cursor AI Integration
 
 - **MCP server** — a sidecar process that exposes build, clean, rebuild, launch, live-coding, and diagnostics as MCP tools. Cursor's AI agent can compile your project, read build errors, and fix them autonomously
-- **Cursor rules** — generates `.cursor/rules/*.mdc` files with UE naming conventions, reflection macros, build system patterns, and Live Coding limitations so the AI writes idiomatic Unreal C++
+- **Cursor rules** — generates `.cursor/rules/*.mdc` files so the AI writes idiomatic Unreal C++ (see [Contributing](#-contributing--help-wanted) above)
 
-### Editor UX
+### 🖥️ Editor UX
 
-- **Status bar** — shows project name, engine version, build configuration, and quick-action buttons
+- **Status bar** — Rider-style toolbar with project name, engine version, build config, and colored action buttons
 - **Problems panel** — MSVC and UBT errors/warnings are parsed and surfaced as native VS Code diagnostics
-- **Progress notifications** — build progress is reported via both the status bar spinner and a notification toast
-- **Task provider** — `enginelink` tasks are available in the Tasks panel and can be referenced from `tasks.json`
+- **Progress notifications** — build progress via status bar spinner and notification toast
+- **Task provider** — `enginelink` tasks available in the Tasks panel and `tasks.json`
 
 ---
 
-## Prerequisites
+## 📋 Prerequisites
 
 | Requirement | Notes |
 |---|---|
-| **Windows 10/11** | Registry-based engine discovery and PowerShell Live Coding are Windows-specific |
-| **Unreal Engine 5.4+** | Tested with UE 5.4; earlier versions may work but are not officially supported |
-| **Visual Studio Build Tools** | Required for MSVC compilation; detected automatically via `vswhere` |
-| **Cursor or VS Code** | Engine version `^1.85.0` |
+| 🪟 **Windows 10/11** | Registry-based engine discovery and PowerShell Live Coding are Windows-specific |
+| 🎮 **Unreal Engine 5.4+** | Tested with UE 5.4; earlier versions may work but aren't officially supported |
+| 🔧 **Visual Studio Build Tools** | Required for MSVC compilation; detected automatically via `vswhere` |
+| ✏️ **Cursor or VS Code** | Engine version `^1.85.0` |
 
 ---
 
-## Installation
+## 🚀 Installation
 
 ### From Source
 
@@ -79,33 +113,33 @@ code --install-extension enginelink-0.1.0.vsix
 
 ---
 
-## Quick Start
+## ⚡ Quick Start
 
 1. Open a folder containing a `.uproject` file in Cursor
 2. EngineLink activates automatically and runs its detection pipeline:
-   - Finds your `.uproject` and parses its `EngineAssociation`
-   - Discovers matching UE installations from the registry
-   - Locates VS Build Tools
+   - 📁 Finds your `.uproject` and parses its `EngineAssociation`
+   - 🔍 Discovers matching UE installations from the registry
+   - 🔧 Locates VS Build Tools
 3. The status bar populates with your project name, engine version, and build actions
 4. Press `Ctrl+Shift+B` to build or use the Command Palette (`Ctrl+Shift+P` → "EngineLink: Build")
 
-If auto-detection fails, you can override paths in settings (see [Configuration](#configuration)).
+If auto-detection fails, you can override paths in settings (see [Configuration](#%EF%B8%8F-configuration)).
 
 ---
 
-## Commands
+## 🎮 Commands
 
 All commands are available via the Command Palette under the **EngineLink** category.
 
 | Command | Keybinding | Description |
 |---|---|---|
-| **Build** | `Ctrl+Shift+B` | Build the project via UnrealBuildTool |
-| **Rebuild (Clean + Build)** | — | Clean all artifacts then build |
-| **Clean** | — | Remove build artifacts |
-| **Launch Unreal Editor** | — | Open UnrealEditor.exe with the current project |
-| **Live Coding Compile** | `Ctrl+Alt+F11` | Send a hot-reload keystroke to the running Unreal Editor |
-| **Generate compile_commands.json** | — | Run UBT in `GenerateClangDatabase` mode |
-| **Select Unreal Engine Installation** | — | Pick from discovered engine installs |
+| **▶ Build** | `Ctrl+Shift+B` | Build the project via UnrealBuildTool |
+| **↻ Rebuild** | — | Clean all artifacts then build |
+| **✕ Clean** | — | Remove build artifacts |
+| **🚀 Launch Unreal Editor** | — | Open UnrealEditor.exe with the current project |
+| **⚡ Live Coding Compile** | `Ctrl+Alt+F11` | Send a hot-reload keystroke to the running Unreal Editor |
+| **📄 Generate compile_commands.json** | — | Run UBT in `GenerateClangDatabase` mode |
+| **Select Engine Installation** | — | Pick from discovered engine installs |
 | **Select UE Project** | — | Pick from detected `.uproject` files |
 | **Select Build Configuration** | — | Choose Debug / DebugGame / Development / Shipping / Test |
 | **Select Build Target Type** | — | Choose Editor / Game / Client / Server |
@@ -114,7 +148,7 @@ Build, Launch, and Live Coding also appear as icon buttons in the editor title b
 
 ---
 
-## Configuration
+## ⚙️ Configuration
 
 All settings are scoped under `enginelink.*` and can be set in your workspace or user `settings.json`.
 
@@ -131,44 +165,26 @@ All settings are scoped under `enginelink.*` and can be set in your workspace or
 
 ---
 
-## MCP Server (Cursor AI Integration)
+## 🤖 MCP Server
 
 EngineLink ships a built-in MCP server that lets Cursor's AI agent interact with your Unreal project. On activation, the server is spawned as a child process and registered in `.cursor/mcp.json`.
-
-### Available MCP Tools
 
 | Tool | Description |
 |---|---|
 | `enginelink_build` | Build the project (supports configuration and target overrides) |
 | `enginelink_rebuild` | Clean and rebuild |
 | `enginelink_clean` | Clean build artifacts |
-| `enginelink_get_build_errors` | Retrieve errors from the last build with file paths, line numbers, and messages |
-| `enginelink_get_project_info` | Get project name, engine version, modules, and current build settings |
+| `enginelink_get_build_errors` | Retrieve errors with file paths, line numbers, and messages |
+| `enginelink_get_project_info` | Get project name, engine version, modules, and build settings |
 | `enginelink_launch_editor` | Launch Unreal Editor |
 | `enginelink_live_coding` | Trigger a Live Coding hot-reload |
 | `enginelink_generate_compile_commands` | Regenerate `compile_commands.json` |
 
-This means you can tell Cursor's agent things like *"build my project and fix any errors"* and it will invoke UBT, read the diagnostics, and propose fixes — all within the chat.
+> 💬 Tell Cursor things like *"build my project and fix any errors"* and it will invoke UBT, read the diagnostics, and propose fixes — all within the chat.
 
 ---
 
-## Cursor Rules
-
-On project detection, EngineLink generates `.cursor/rules/*.mdc` files (if they don't already exist) so the AI follows Unreal conventions:
-
-| Rule File | Covers |
-|---|---|
-| `unreal-conventions.mdc` | Class prefixes (`U`, `A`, `F`, `E`, `I`, `T`), PascalCase, UE container types |
-| `unreal-macros.mdc` | `UCLASS`, `UPROPERTY`, `UFUNCTION`, `USTRUCT`, `UENUM`, `GENERATED_BODY` |
-| `unreal-build-system.mdc` | `.Build.cs`, `.Target.cs`, module structure, dependency management |
-| `unreal-live-coding.mdc` | What Live Coding can and cannot patch at runtime |
-| `unreal-patterns.mdc` | Delegates, timers, subsystems, Gameplay Tags, Enhanced Input, logging, actor spawning |
-
-These files are never overwritten, so you can customize them freely.
-
----
-
-## Task Provider
+## 📝 Task Provider
 
 EngineLink registers an `enginelink` task type. You can reference it in `.vscode/tasks.json`:
 
@@ -187,26 +203,21 @@ EngineLink registers an `enginelink` task type. You can reference it in `.vscode
       "type": "enginelink",
       "action": "clean",
       "label": "EngineLink: Clean"
-    },
-    {
-      "type": "enginelink",
-      "action": "generateCompileCommands",
-      "label": "EngineLink: Generate compile_commands.json"
     }
   ]
 }
 ```
 
-Two problem matchers are also provided — `$enginelink-msvc` and `$enginelink-ubt` — for parsing MSVC and UnrealBuildTool output respectively.
+Two problem matchers are also provided — `$enginelink-msvc` and `$enginelink-ubt` — for parsing MSVC and UnrealBuildTool output.
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 src/
-├── extension.ts                  # Entry point — activation, command registration, detection pipeline
-├── constants.ts                  # IDs, command names, config keys, registry paths
+├── extension.ts                  # Entry point — activation, command registration
+├── constants.ts                  # IDs, command names, config keys
 ├── types.ts                      # Shared TypeScript interfaces
 ├── build/
 │   ├── ubt.ts                    # UBT command-line construction
@@ -234,7 +245,7 @@ src/
 │   └── uprojectParser.ts         # .uproject JSON parsing
 ├── platform/
 │   ├── process.ts                # spawnAsync, isUnrealEditorRunning
-│   ├── paths.ts                  # File/directory existence helpers, UBT/Editor path resolution
+│   ├── paths.ts                  # File/directory helpers, UBT/Editor path resolution
 │   └── registry.ts               # Windows registry read utilities
 └── ui/
     ├── statusBar.ts              # Status bar items
@@ -244,69 +255,25 @@ src/
 
 ---
 
-## Development
-
-### Building
+## 🛠️ Development
 
 ```bash
 npm install
 npm run build        # one-shot build
 npm run watch        # rebuild on change
-```
-
-The build is handled by [esbuild](https://esbuild.github.io/) and produces two bundles in `dist/`:
-
-- `extension.js` — the main extension
-- `mcp-server.js` — the standalone MCP server process
-
-### Running Locally
-
-1. Open this repo in Cursor / VS Code
-2. Press `F5` to launch the Extension Development Host
-3. Open a folder containing a `.uproject` file in the new window
-
-### Linting & Formatting
-
-```bash
 npm run lint         # ESLint
 npm run format       # Prettier
 npm run typecheck    # TypeScript type checking
-```
-
-### Testing
-
-```bash
 npm run test         # Vitest
-```
-
-### Packaging
-
-```bash
 npm run package      # produces .vsix via vsce
 ```
 
----
+Built with [esbuild](https://esbuild.github.io/) — produces `dist/extension.js` and `dist/mcp-server.js`.
 
-## Contributing
-
-Contributions are welcome! Here's how to get started:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Make your changes
-4. Run `npm run lint && npm run typecheck` to verify
-5. Commit and push to your fork
-6. Open a pull request
-
-### Areas where help is needed
-
-- **Testing** — the test infrastructure is in place (Vitest) but no tests have been written yet. This is the biggest gap right now: unit tests for detection logic, build command construction, output parsing, and integration tests against real UE projects
-- **macOS / Linux support** — engine discovery, process detection, and Live Coding are currently Windows-only
-- **UE version support** — testing and adapting for UE versions before 5.4
-- **Marketplace publishing** — getting the extension on Open VSX (Cursor's marketplace)
+To run locally: open this repo in Cursor, press `F5`, then open a UE project folder in the new window.
 
 ---
 
-## License
+## 📄 License
 
 [MIT](LICENSE) &copy; 2026 EngineLink
