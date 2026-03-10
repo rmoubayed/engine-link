@@ -31,6 +31,7 @@ export async function activate(extensionContext: vscode.ExtensionContext) {
   };
 
   outputChannel.appendLine('[EngineLink] Activating...');
+  outputChannel.show(true); // Show output panel but don't steal focus
 
   // Register disposables
   extensionContext.subscriptions.push(

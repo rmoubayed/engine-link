@@ -2,7 +2,7 @@
   "name": "enginelink",
   "displayName": "EngineLink",
   "description": "Cursor-first Unreal Engine build bridge — build, launch, and live-code UE projects with AI-powered tooling",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "enginelink",
   "license": "MIT",
   "repository": {

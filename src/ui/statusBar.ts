@@ -7,7 +7,7 @@ import type { EngineLinkSettings } from '../config/settings';
  * EngineLink status bar — Rider-style toolbar at the bottom.
  *
  * Layout (left to right):
- *   [▶ BUILD] | [⟳ Rebuild] | [🗑 Clean] | [Development ▾] | [Editor ▾] | [Win64] | [ProjectName] | [UE 5.4] | [⚡ LIVE CODING] | [🚀 LAUNCH]
+ *   [▶ Build] | [⟳ Rebuild] | [🗑 Clean] | [Development ▾] | [Editor ▾] | [Win64] | [ProjectName] | [UE 5.4] | [⚡ Live Coding] | [🚀 Launch]
  *
  * - Action buttons have colored backgrounds for visibility
  * - Build button shows spinner + red error state
@@ -87,7 +87,7 @@ export class StatusBarManager {
     if (this._isBuilding) return;
 
     // ── BUILD button (prominent, colored) ──
-    this.buildBtn.text = '$(play)  BUILD';
+    this.buildBtn.text = '$(play)  Build';
     this.buildBtn.tooltip = 'Build project (Ctrl+Shift+B)';
     this.buildBtn.backgroundColor = new vscode.ThemeColor('statusBarItem.prominentBackground');
     this.buildBtn.color = undefined;
@@ -136,12 +136,12 @@ export class StatusBarManager {
     }
 
     // ── LIVE CODING (colored) ──
-    this.liveCodingBtn.text = '$(zap)  LIVE CODING';
+    this.liveCodingBtn.text = '$(zap)  Live Coding';
     this.liveCodingBtn.tooltip = 'Trigger Live Coding compile (Ctrl+Alt+F11)';
     this.liveCodingBtn.backgroundColor = new vscode.ThemeColor('statusBarItem.prominentBackground');
 
     // ── LAUNCH (colored) ──
-    this.launchBtn.text = '$(rocket)  LAUNCH';
+    this.launchBtn.text = '$(rocket)  Launch';
     this.launchBtn.tooltip = 'Launch Unreal Editor';
     this.launchBtn.backgroundColor = new vscode.ThemeColor('statusBarItem.prominentBackground');
 
@@ -176,7 +176,7 @@ export class StatusBarManager {
    */
   showBuilding(): void {
     this._isBuilding = true;
-    this.buildBtn.text = '$(sync~spin)  BUILDING...';
+    this.buildBtn.text = '$(sync~spin)  Building...';
     this.buildBtn.tooltip = 'Build in progress...';
     this.buildBtn.backgroundColor = undefined;
     this.buildBtn.command = undefined;
@@ -189,12 +189,12 @@ export class StatusBarManager {
     this._isBuilding = false;
 
     if (success) {
-      this.buildBtn.text = '$(check)  BUILD OK';
+      this.buildBtn.text = '$(check)  Build OK';
       this.buildBtn.tooltip = 'Build succeeded — click to build again';
       this.buildBtn.backgroundColor = undefined;
       this.buildBtn.command = Commands.Build;
     } else {
-      this.buildBtn.text = `$(error)  ${errorCount} ERROR${errorCount !== 1 ? 'S' : ''}`;
+      this.buildBtn.text = `$(error)  ${errorCount} error${errorCount !== 1 ? 's' : ''}`;
       this.buildBtn.tooltip = 'Build failed — click to view errors';
       this.buildBtn.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
       this.buildBtn.command = 'workbench.action.problems.focus';
