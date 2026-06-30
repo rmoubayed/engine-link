@@ -26,6 +26,7 @@ export const Config = {
   UpsertClangdConfig: `${EXTENSION_ID}.upsertClangdConfig`,
   LiveCodingMethod: `${EXTENSION_ID}.liveCoding.method`,
   VSBuildToolsPath: `${EXTENSION_ID}.vsBuildTools.path`,
+  AIAssistant: `${EXTENSION_ID}.aiAssistant`,
 } as const;
 
 /** Context keys set via vscode.commands.executeCommand('setContext', ...) */

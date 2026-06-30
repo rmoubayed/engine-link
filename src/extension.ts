@@ -8,9 +8,11 @@ import { detectBuildTools } from './detection/buildToolsDetector';
 import { EngineLinkSettings } from './config/settings';
 import { StatusBarManager } from './ui/statusBar';
 import { createOutputChannel } from './ui/outputChannel';
-import { generateCursorRules } from './cursor/rulesGenerator';
-import { ensureClangdConfig } from './cursor/clangdConfig';
-import { startMcpServer, sendStateToMcp, stopMcpServer } from './cursor/mcpServer';
+import { generateCursorRules } from './ai/cursorRulesGenerator';
+import { generateClaudeRules } from './ai/claudeRulesGenerator';
+import { ensureClangdConfig } from './ai/clangdConfig';
+import { startMcpServer, sendStateToMcp, stopMcpServer } from './ai/mcpServer';
+import { resolveAIAssistant } from './ai/editorDetect';
 import { EngineLinkTaskProvider } from './build/taskProvider';
 import type { EngineLinkContext } from './types';
 
@@ -57,8 +59,12 @@ export async function activate(extensionContext: vscode.ExtensionContext) {
   // Run detection pipeline (auto compile_commands only on this first pass — see runDetectionPipeline)
   await runDetectionPipeline({ allowAutoCompileDb: true });
 
+  // Resolve AI assistant
+  const assistant = resolveAIAssistant(settings.aiAssistant);
+  outputChannel.appendLine(`[EngineLink] AI assistant: ${assistant === 'cursor' ? 'Cursor' : assistant === 'claude' ? 'Claude Code' : 'none (manual MCP setup)'}`);
+
   // Start MCP server
-  await startMcpServer(extensionContext.extensionPath, context, settings);
+  await startMcpServer(extensionContext.extensionPath, context, settings, assistant);
 
   // Watch for project changes
   extensionContext.subscriptions.push(
@@ -153,13 +159,28 @@ async function runDetectionPipeline(options?: { allowAutoCompileDb?: boolean }) 
 
   statusBar.update(context, settings);
 
-  // Generate Cursor AI rules
+  // Resolve AI assistant to decide which rule files to generate
+  const assistant = resolveAIAssistant(settings.aiAssistant);
+
   if (context.project) {
-    try {
-      await generateCursorRules(context.project);
-      outputChannel.appendLine('[EngineLink] Cursor rules generated in .cursor/rules/');
-    } catch (err) {
-      outputChannel.appendLine(`[EngineLink] Failed to generate Cursor rules: ${err}`);
+    // Generate Cursor AI rules (.cursor/rules/*.mdc)
+    if (assistant === 'cursor') {
+      try {
+        await generateCursorRules(context.project);
+        outputChannel.appendLine('[EngineLink] Cursor rules generated in .cursor/rules/');
+      } catch (err) {
+        outputChannel.appendLine(`[EngineLink] Failed to generate Cursor rules: ${err}`);
+      }
+    }
+
+    // Generate Claude Code rules (CLAUDE.md)
+    if (assistant === 'claude') {
+      try {
+        await generateClaudeRules(context.project);
+        outputChannel.appendLine('[EngineLink] Claude Code rules generated (CLAUDE.md)');
+      } catch (err) {
+        outputChannel.appendLine(`[EngineLink] Failed to generate Claude Code rules: ${err}`);
+      }
     }
   }
 
@@ -292,4 +313,3 @@ export function getSettings(): EngineLinkSettings {
 export function getStatusBar(): StatusBarManager {
   return statusBar;
 }
-
