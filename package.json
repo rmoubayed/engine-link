@@ -1,13 +1,13 @@
 {
-  "name": "enginelink",
-  "displayName": "EngineLink — UE Build Bridge for Cursor & Claude Code",
+  "name": "unreal-engine-link",
+  "displayName": "UnrealEngineLink — UE Build Bridge for Cursor & Claude Code",
   "description": "Unreal Engine build bridge for AI-powered editors — build, launch, and live-code UE projects with MCP tooling in Cursor and Claude Code",
-  "version": "0.1.5",
-  "publisher": "enginelink",
+  "version": "1.0.0",
+  "publisher": "Alingkumo",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rmoubayed/engine-link"
+    "url": "https://github.com/alingkumo/engine-link"
   },
   "engines": {
     "vscode": "^1.85.0"

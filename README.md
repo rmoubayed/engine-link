@@ -1,6 +1,8 @@
-# EngineLink
+# UnrealEngineLink
 
-🌐 [enginelink.dev](https://enginelink.dev)
+> **📌 Note**: This is a fork of [rmoubayed/engine-link](https://github.com/rmoubayed/engine-link) with added VS Code and Claude Code support. The original author has not yet merged the pull request, so this version is published independently under the same MIT license with full attribution.
+
+🌐 Original project: [enginelink.dev](https://enginelink.dev)
 
 **Unreal Engine build bridge for AI-powered editors** — build, launch, and live-code UE projects with MCP tooling in Cursor and Claude Code.
 
