@@ -35,7 +35,7 @@ You need **Windows**, **Unreal Engine**, and **Visual Studio** with the right co
 
 #### Unreal Engine 5.4+
 
-Install via the [Epic Games Launcher](https://www.unrealengine.com/). EngineLink has been tested on **UE 5.4 – 5.7**.
+Install via the [Epic Games Launcher](https://www.unrealengine.com/). EngineLink has been tested on **UE 5.4 – 5.8**.
 
 #### Visual Studio with C++ and Clang
 
@@ -88,14 +88,14 @@ Install a clangd-based C/C++ extension:
 
 #### Where `compile_commands.json` lives
 
-UnrealBuildTool often writes the database next to the **engine** (e.g. `UE_5.7\compile_commands.json`). **EngineLink always copies it to your `.uproject` folder** as `compile_commands.json` at the **project root** after a successful run, so **clangd** can find it when you open files under `Source/` (it walks up to the workspace root).
+UnrealBuildTool often writes the database next to the **engine** (e.g. `UE_5.8\compile_commands.json`). **EngineLink always copies it to your `.uproject` folder** as `compile_commands.json` at the **project root** after a successful run, so **clangd** can find it when you open files under `Source/` (it walks up to the workspace root).
 
 If IntelliSense still cannot find the compilation database (e.g. generation failed or you use a non-standard layout), you can point clangd at the engine folder manually in **`.vscode/settings.json`**:
 
 ```json
 {
   "clangd.arguments": [
-    "--compile-commands-dir=C:/Program Files/Epic Games/UE_5.7"
+    "--compile-commands-dir=C:/Program Files/Epic Games/UE_5.8"
   ]
 }
 ```

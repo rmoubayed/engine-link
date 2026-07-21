@@ -84,7 +84,7 @@ function extractClangDatabasePath(ubtOutput: string): string | undefined {
 
 /**
  * Search for the generated compile_commands.json and copy to project root.
- * UBT 5.x often writes next to the engine (e.g. UE_5.7\compile_commands.json), not inside the .uproject folder.
+ * UBT 5.x often writes next to the engine (e.g. UE_5.8\compile_commands.json), not inside the .uproject folder.
  */
 async function findAndPlaceCompileCommands(
   ctx: EngineLinkContext,
