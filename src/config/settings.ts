@@ -46,6 +46,10 @@ export class EngineLinkSettings {
     return this.config.get<string>('vsBuildTools.path', '');
   }
 
+  get aiAssistant(): 'auto' | 'cursor' | 'claude' {
+    return this.config.get<'auto' | 'cursor' | 'claude'>('aiAssistant', 'auto');
+  }
+
   /**
    * Listen for configuration changes.
    */

@@ -1,4 +1,6 @@
 .vscode/**
+.claude/**
+**/*.vsix
 src/**
 out/**
 node_modules/**

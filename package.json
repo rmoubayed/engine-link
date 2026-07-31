@@ -1,13 +1,13 @@
 {
-  "name": "enginelink",
-  "displayName": "EngineLink",
-  "description": "Cursor-first Unreal Engine build bridge — build, launch, and live-code UE projects with AI-powered tooling",
-  "version": "0.1.5",
-  "publisher": "enginelink",
+  "name": "unreal-engine-link",
+  "displayName": "UnrealEngineLink — UE Build Bridge for Cursor & Claude Code",
+  "description": "Unreal Engine build bridge for AI-powered editors — build, launch, and live-code UE projects with MCP tooling in Cursor and Claude Code",
+  "version": "1.0.1",
+  "publisher": "Alingkumo",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rmoubayed/engine-link"
+    "url": "https://github.com/alingkumo/engine-link"
   },
   "engines": {
     "vscode": "^1.85.0"
@@ -17,9 +17,6 @@
     "Other",
     "Programming Languages"
   ],
-  "extensionPack": [
-    "anysphere.cpptools"
-  ],
   "keywords": [
     "unreal engine",
     "unreal",
@@ -28,6 +25,8 @@
     "c++",
     "build",
     "cursor",
+    "claude code",
+    "vscode",
     "live coding"
   ],
   "icon": "media/icon.png",
@@ -165,6 +164,17 @@
           "type": "string",
           "default": "",
           "description": "Manual override for VS Build Tools installation path."
+        },
+        "enginelink.aiAssistant": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "cursor",
+            "claude"
+          ],
+          "description": "AI assistant to generate rules and MCP config for. 'auto' detects Cursor or Claude Code automatically.",
+          "scope": "resource"
         }
       }
     },

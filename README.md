@@ -1,14 +1,27 @@
-# EngineLink
+# UnrealEngineLink
 
-🌐 [enginelink.dev](https://enginelink.dev)
+> **📌 Note**: This is a fork of [rmoubayed/engine-link](https://github.com/rmoubayed/engine-link) with added VS Code and Claude Code support. The original author has not yet merged the pull request, so this version is published independently under the same MIT license with full attribution.
 
-**Cursor-first Unreal Engine build bridge** — build, launch, and live-code UE projects with AI-powered tooling.
+🌐 Original project: [enginelink.dev](https://enginelink.dev)
 
-EngineLink connects [Cursor](https://cursor.sh) to Unreal Engine so you can compile, iterate, and debug C++ projects without leaving your editor. It auto-detects your `.uproject`, discovers engine installations from the Windows registry, and exposes every build action to Cursor's AI agent via a built-in [MCP](https://modelcontextprotocol.io/) server.
+**Unreal Engine build bridge for AI-powered editors** — build, launch, and live-code UE projects with MCP tooling in Cursor and Claude Code.
+
+EngineLink connects your AI editor to Unreal Engine so you can compile, iterate, and debug C++ projects without leaving the editor. It auto-detects your `.uproject`, discovers engine installations from the Windows registry, and exposes every build action to the AI agent via a built-in [MCP](https://modelcontextprotocol.io/) server.
 
 > 🧪 **Status:** Early preview. Windows-only for now.
 
-> 👋 **TL;DR:** I've been building software for 10 years but game dev is new to me. As I learn Unreal Engine, I found Rider and Visual Studio to be old-fashioned compared to modern AI-first editors — so I decided to give Cursor full UE capabilities. I'm testing this extension as I go, learning and breaking things along the way. Contributions and feedback are very welcome :)
+> 👋 **TL;DR:** I've been building software for 10 years but game dev is new to me. As I learn Unreal Engine, I found Rider and Visual Studio to be old-fashioned compared to modern AI-first editors — so I decided to give AI editors full UE capabilities. I'm testing this extension as I go, learning and breaking things along the way. Contributions and feedback are very welcome :)
+
+---
+
+## Supported Editors
+
+| Editor | AI Assistant | MCP Config | Rules |
+|---|---|---|---|
+| **Cursor** | Cursor AI Agent | `.cursor/mcp.json` | `.cursor/rules/*.mdc` |
+| **VS Code** | Claude Code | `.mcp.json` | `CLAUDE.md` |
+
+EngineLink auto-detects which editor you're using. You can override this with the `enginelink.aiAssistant` setting (`"auto"`, `"cursor"`, or `"claude"`).
 
 ---
 
@@ -22,7 +35,7 @@ You need **Windows**, **Unreal Engine**, and **Visual Studio** with the right co
 
 #### Unreal Engine 5.4+
 
-Install via the [Epic Games Launcher](https://www.unrealengine.com/). EngineLink has been tested on **UE 5.4 – 5.7**.
+Install via the [Epic Games Launcher](https://www.unrealengine.com/). EngineLink has been tested on **UE 5.4 – 5.8**.
 
 #### Visual Studio with C++ and Clang
 
@@ -37,9 +50,11 @@ Open **Visual Studio Installer**, click **Modify** on your install (Community / 
 
 > If you skip Clang, EngineLink will still build your project fine (UE uses MSVC), but `compile_commands.json` generation will fail and you won't get full IntelliSense. You can always add Clang later.
 
-#### Cursor
+#### Editor
 
-Install [Cursor](https://cursor.sh) (version `1.85.0` or later).
+**Cursor:** Install [Cursor](https://cursor.sh) (version `1.85.0` or later).
+
+**VS Code + Claude Code:** Install [VS Code](https://code.visualstudio.com/) (version `1.85.0` or later), then install the [Claude Code extension](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code).
 
 ---
 
@@ -47,7 +62,7 @@ Install [Cursor](https://cursor.sh) (version `1.85.0` or later).
 
 **From Marketplace** — *coming soon.*
 
-**From VSIX** — download or build the `.vsix`, then in Cursor: **Extensions → ... → Install from VSIX...**
+**From VSIX** — download or build the `.vsix`, then in your editor: **Extensions → ... → Install from VSIX...**
 
 **From Source:**
 
@@ -62,22 +77,25 @@ Press `F5` to launch the Extension Development Host, or package it with `npm run
 
 ---
 
-### Step 3 — C/C++ for Cursor (IntelliSense — installed automatically)
+### Step 3 — C/C++ IntelliSense
 
 EngineLink handles **building** your project, but you need a language server for **IntelliSense** (code completion, go-to-definition, diagnostics on the fly).
 
-EngineLink is an **extension pack** that automatically installs **[C/C++ for Cursor](https://marketplace.visualstudio.com/items?itemName=anysphere.cpptools)** — Cursor's official C/C++ extension. It adds LSP, debugging, and code browsing support using **clangd** under the hood. You don't need to install it separately.
+Install a clangd-based C/C++ extension:
+
+- **Cursor:** Install [C/C++ for Cursor](https://marketplace.visualstudio.com/items?itemName=anysphere.cpptools) — Cursor's official C/C++ extension with clangd under the hood.
+- **VS Code:** Install [clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd) by LLVM, or [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) by Microsoft.
 
 #### Where `compile_commands.json` lives
 
-UnrealBuildTool often writes the database next to the **engine** (e.g. `UE_5.7\compile_commands.json`). **EngineLink always copies it to your `.uproject` folder** as `compile_commands.json` at the **project root** after a successful run, so **clangd** can find it when you open files under `Source/` (it walks up to the workspace root).
+UnrealBuildTool often writes the database next to the **engine** (e.g. `UE_5.8\compile_commands.json`). **EngineLink always copies it to your `.uproject` folder** as `compile_commands.json` at the **project root** after a successful run, so **clangd** can find it when you open files under `Source/` (it walks up to the workspace root).
 
 If IntelliSense still cannot find the compilation database (e.g. generation failed or you use a non-standard layout), you can point clangd at the engine folder manually in **`.vscode/settings.json`**:
 
 ```json
 {
   "clangd.arguments": [
-    "--compile-commands-dir=C:/Program Files/Epic Games/UE_5.7"
+    "--compile-commands-dir=C:/Program Files/Epic Games/UE_5.8"
   ]
 }
 ```
@@ -105,14 +123,15 @@ This only suppresses that one diagnostic class. EngineLink replaces only its own
 
 Once everything is installed:
 
-1. Open a folder containing a `.uproject` file in Cursor
+1. Open a folder containing a `.uproject` file in your editor
 2. EngineLink activates automatically and:
    - Finds your `.uproject` and parses `EngineAssociation`
    - Discovers the matching UE installation from the registry
    - Locates VS Build Tools
-   - Generates Cursor rules (`.cursor/rules/*.mdc`)
+   - Generates AI rules (`.cursor/rules/*.mdc` for Cursor, `CLAUDE.md` for Claude Code)
    - Generates `compile_commands.json` (if Clang is installed)
    - Creates/updates `.clangd` for MSVC suppression
+   - Registers the MCP server in `.cursor/mcp.json` or `.mcp.json`
 3. The status bar shows your project name, engine version, and build actions
 4. Press **`Ctrl+Shift+B`** to build
 
@@ -136,10 +155,11 @@ If auto-detection fails, override paths in [Configuration](#configuration).
 - **Engine** — reads Windows registry (launcher + source builds) and common paths
 - **Build tools** — locates Visual Studio via `vswhere`
 
-### Cursor AI Integration
+### AI Integration
 
-- **MCP server** — exposes build, clean, rebuild, launch, live-coding, diagnostics, and project info as MCP tools. Tell Cursor *"build my project and fix any errors"* and it handles everything autonomously
-- **Cursor rules** — generates `.cursor/rules/*.mdc` files so the AI writes idiomatic Unreal C++
+- **MCP server** — exposes build, clean, rebuild, launch, live-coding, diagnostics, and project info as MCP tools for both Cursor's AI agent and Claude Code
+- **Editor auto-detection** — automatically generates the right config format for your editor (`.cursor/mcp.json` or `.mcp.json`)
+- **AI rules** — generates `.cursor/rules/*.mdc` for Cursor or `CLAUDE.md` for Claude Code so the AI writes idiomatic Unreal C++
 
 ### Editor UX
 
@@ -180,6 +200,7 @@ All settings live under `enginelink.*` in your workspace or user `settings.json`
 | `enginelink.buildConfiguration` | `enum` | `Development` | `Debug`, `DebugGame`, `Development`, `Shipping`, `Test` |
 | `enginelink.buildTarget` | `enum` | `Editor` | `Editor`, `Game`, `Client`, `Server` |
 | `enginelink.platform` | `string` | `Win64` | Target platform |
+| `enginelink.aiAssistant` | `enum` | `auto` | `auto` (detect), `cursor`, or `claude` |
 | `enginelink.autoGenerateCompileCommands` | `boolean` | `true` | Auto-generate `compile_commands.json` on detection (needs Clang) |
 | `enginelink.upsertClangdConfig` | `boolean` | `true` | Auto-update `.clangd` with `builtin_definition` suppression |
 | `enginelink.liveCoding.method` | `enum` | `keystroke` | Live Coding trigger (`keystroke` or `disabled`) |
@@ -189,7 +210,7 @@ All settings live under `enginelink.*` in your workspace or user `settings.json`
 
 ## MCP Server (AI Agent Tools)
 
-EngineLink ships a built-in MCP server that Cursor's AI agent can call directly. It's spawned on activation and registered in `.cursor/mcp.json`.
+EngineLink ships a built-in MCP server that AI agents can call directly. It's spawned on activation and registered in the appropriate config file for your editor.
 
 | Tool | Description |
 |---|---|
@@ -204,9 +225,11 @@ EngineLink ships a built-in MCP server that Cursor's AI agent can call directly.
 
 ---
 
-## Cursor Rules
+## AI Rules
 
-On project detection, EngineLink generates `.cursor/rules/*.mdc` files (never overwrites existing ones) so the AI follows UE conventions:
+On project detection, EngineLink generates guidance files so the AI follows UE conventions. The format depends on your editor:
+
+### Cursor (`.cursor/rules/*.mdc`)
 
 | Rule File | Covers |
 |---|---|
@@ -215,6 +238,12 @@ On project detection, EngineLink generates `.cursor/rules/*.mdc` files (never ov
 | `unreal-build-system.mdc` | `.Build.cs`, `.Target.cs`, modules, plugins |
 | `unreal-live-coding.mdc` | What Live Coding can and cannot hot-patch |
 | `unreal-patterns.mdc` | Delegates, timers, subsystems, Gameplay Tags, Enhanced Input, logging |
+
+### Claude Code (`CLAUDE.md`)
+
+A single `CLAUDE.md` at the project root combines all the guidance above into one file. Claude Code reads this automatically for project context.
+
+> Existing files are never overwritten — EngineLink only creates rules if they don't exist yet, so your customizations are safe.
 
 > **This is where we need the most help.** If you're an experienced UE developer, your feedback on these rules would be incredibly valuable — please open an issue or PR!
 
@@ -250,12 +279,12 @@ This project is early and there's a lot to improve. Jump in!
 1. Fork the repo
 2. Create a feature branch (`git checkout -b feature/my-feature`)
 3. Make your changes
-4. Run `npm run lint && npm run typecheck`
+4. Run `npm run typecheck`
 5. Open a pull request
 
 **Areas where help is needed:**
 - **Testing** — Vitest is set up but no tests exist yet
-- **Cursor rules** — UE experts: are the rules correct? What's missing?
+- **AI rules** — UE experts: are the rules correct? What's missing?
 - **macOS / Linux** — engine discovery and Live Coding are Windows-only right now
 
 ---
@@ -277,9 +306,12 @@ src/
 │   └── generateCommands.ts       # compile_commands.json generation
 ├── config/
 │   └── settings.ts               # Typed settings accessor
-├── cursor/
+├── ai/
 │   ├── mcpServer.ts              # MCP server lifecycle and IPC
-│   ├── rulesGenerator.ts         # .cursor/rules/*.mdc generation
+│   ├── mcpRegistration.ts        # MCP config registration (Cursor / Claude)
+│   ├── editorDetect.ts           # AI assistant auto-detection
+│   ├── cursorRulesGenerator.ts   # .cursor/rules/*.mdc generation
+│   ├── claudeRulesGenerator.ts   # CLAUDE.md generation
 │   └── clangdConfig.ts           # .clangd managed block upsert
 ├── detection/
 │   ├── projectDetector.ts        # .uproject scanning and selection
@@ -310,7 +342,6 @@ src/
 npm install
 npm run build        # one-shot build
 npm run watch        # rebuild on change
-npm run lint         # ESLint
 npm run format       # Prettier
 npm run typecheck    # TypeScript type checking
 npm run test         # Vitest
@@ -319,7 +350,7 @@ npm run package      # produces .vsix via vsce
 
 Built with [esbuild](https://esbuild.github.io/) — produces `dist/extension.js` and `dist/mcp-server.js`.
 
-To run locally: open this repo in Cursor, press `F5`, then open a UE project folder in the new window.
+To run locally: open this repo in Cursor or VS Code, press `F5`, then open a UE project folder in the new window.
 
 ---
 
